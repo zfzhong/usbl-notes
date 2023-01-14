@@ -31,6 +31,7 @@
 \usepackage{epigraph}
 \usepackage{csquotes}
 \usepackage{soul}
+\usepackage{subcaption}
 %\usepackage{ctex}
 
 %SetFonts
@@ -73,7 +74,76 @@
 \textbf{USBLPHYD}
 
 
+\newpage
+\section{Inertial Measurement Unit: ICM20948}
 
+\begin{figure}[ht]
+\centering
+\begin{subfigure}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{imgs/icm20948-front.png}
+\caption{ICM20948 Front}
+\end{subfigure}
+\begin{subfigure}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{imgs/icm20948-back.png}
+\caption{ICM20948 Back}
+\end{subfigure}
+\end{figure}
 
+\begin{center}
+\begin{asy}
+/* ICM20948: 15.7mm x 17.7mm x 4.6mm (1'' x 0.7'' x 0.2'')*/
+unitsize(20pt);
+int h = 7;
+int w = 10;
+real r = 0.7;
+draw(box((0,0),(w,h)));
+
+pair [] p1 = {(1,1), (w-1,1), (1,h-1), (w-1,h-1)};
+for (int i=0; i<p1.length; ++i) {
+    draw(circle(p1[i], r));
+}
+
+pair [] p2 = {(2.5,1), (2.5,h-1), (3.5,1), (3.5,h-1), (4.5,1), (4.5,h-1), (5.5,1), (5.5,h-1), (6.5,1), (6.5,h-1), (7.5,1), (7.5,h-1)};
+for (int i=0; i<p2.length; ++i) {
+    draw(circle(p2[i], r/2));
+}
+
+\end{asy}
+\end{center}
+
+\subsection{Pinouts}
+\subsubsection{Power Pins}
+\begin{enumerate}
+\item VIN: This is the power pin. Since the sensor chip uses 3 VDC, we have included a voltage regulator on board that will take 3-5VDC and safely convert it down. To power the board, give it the same power as the logic level of your microcontroller (e.g. for a 5V microcontroller like Arduino, use 5V).
+\item 1V8: This is the 1.8V output from the voltage regulator, you can grab up to 100mA from this if you like.
+\item GND: The common ground for power and logic.
+\end{enumerate}
+
+\subsubsection{I2C Logic Pins}
+\begin{enumerate}
+\item SCL: I2C clock pin, connect to your microcontroller I2C clock line. This pin is level shifted so you can use 3-5V logic, and there's a 10K pullup on this pin.
+\item SDA: I2C data pin, connect to your microcontroller I2C data line. This pin is level shifted so you can use 3-5V logic, and there's a 10K pullup on this pin.
+\item STEMMA QT: These connectors allow you to connectors to dev boards with STEMMA QT connectors or to other things with various associated accessories.
+\item SDO/ADR Jumper: I2C Address pin. Pulling this pin high or bridging the solder jumper on the back will change the I2C address from 0x69 to 0x68.
+\end{enumerate}
+
+\subsubsection{SPI Logic Pins}
+\begin{enumerate}
+\item SCL: This is also the SPI Clock pin / SCK, it's an input to the chip.
+\item SDA: This is also the Serial Data In / Microcontroller Out Sensor In / MOSI pin, for data sent from your processor to the ICM20948.
+\item SDO: This is the Serial Data Out / Microcontroller In Sensor Out / MISO pin, for data sent from the ICM20948 to your processor. 
+\item CS: This is the Chip Select pin, drop it low to start an SPI transaction. It's an input to the chip.
+\end{enumerate}
+
+\subsubsection{Other Pins}
+\begin{enumerate}
+\item INT: This is the primary interrupt pin. You can setup the ICM20948 to pull this low or high when certain conditions are met such as new measurement data being available. Consult the datasheet for usage
+\item AC: Auxillary I2C bus clock. Advanced users can consult the datasheet to learn how to use this pin to communicate with sensors on the ICM20948's auxiliary bus. 1.8V Logic Only!
+\item AD: Auxiliary I2C bus data. Advanced users can consult the datasheet to learn how to use this pin to communicate with sensors on the ICM20948's auxiliary bus. 1.8V Logic Only!
+\item FS:  External frame sync. Advanced users can consult the datasheet to learn how to use this pin to synchronize measurements with additional sensors. 1.8V Logic Only!
+\end{enumerate}
+
+\subsubsection{Note}
+If you want to connect multiple ICM20948s to one microcontroller, have them share the SCL, SDA, and DO pins. Then assign each one a unique CS pin.
 
 \end{document} 
