@@ -91,8 +91,12 @@
 
 \begin{center}
 \begin{asy}
-/* ICM20948: 15.7mm x 17.7mm x 4.6mm (1'' x 0.7'' x 0.2'')*/
-unitsize(20pt);
+/* 
+ICM20948 board: 15.7mm x 17.7mm x 4.6mm (1'' x 0.7'' x 0.2'');
+24-pin QFN: 3mm x 3mm x 1mm
+*/
+import math;
+unitsize(16pt);
 int h = 7;
 int w = 10;
 real r = 0.7;
@@ -103,14 +107,62 @@ for (int i=0; i<p1.length; ++i) {
     draw(circle(p1[i], r));
 }
 
-pair [] p2 = {(2.5,1), (2.5,h-1), (3.5,1), (3.5,h-1), (4.5,1), (4.5,h-1), (5.5,1), (5.5,h-1), (6.5,1), (6.5,h-1), (7.5,1), (7.5,h-1)};
-for (int i=0; i<p2.length; ++i) {
-    draw(circle(p2[i], r/2));
+void plotoutpins(pair a, pair b, string [] a1, string [] b1, real gapx, real gapt, real r) {
+    for (int i=0; i<a1.length; ++i) {
+        pair x = a+i*(gapx, 0);
+        draw(circle(x, r/2));
+        label("\tiny "+a1[i], x-(0,gapt), S);
+        pair y = b+i*(gapx, 0);
+        draw(circle(y, r/2));
+        label("\tiny "+b1[i], y+(0,gapt), N);
+    }
 }
+
+string [] a1 = {"VIN", "1V8", "GND", "SCL", "SDA", "INT"};
+string [] b1 = {"FS", "AD", "AC", "G", "SD0", "CS"};
+
+plotoutpins((2.5,1), (2.5,h-1), a1, b1, 1, 0.3, r);
 
 draw(box((0.1, 2.15), (1+r, 4.85)));
 draw(box((w-0.1, 2.15), (w-1-r, 4.85)));
 
+for (int i=0; i<4; ++i) {
+    filldraw(box((0.9+r,2.8+i*0.4),(1.3+r,3+i*0.4)), gray);
+    draw((0.8+r,2.9+i*0.4)--(1+r,2.9+i*0.4));
+    filldraw(box((w-0.9-r,2.8+i*0.4),(w-1.3-r,3+i*0.4)), gray);
+    draw((w-0.8-r,2.9+i*0.4)--(w-1-r,2.9+i*0.4));    
+}
+
+void plotaxis(pair o) {
+    dot(o);
+    pair x = o - (1.2,0);
+    pair y = o + (0,1.2);
+    draw(o -- x, arrow=Arrow(TeXHead), blue);
+    draw(o -- y, arrow=Arrow(TeXHead), blue);
+    label("\small $x$", (o+x)/2, S);
+    label("\small $y$", (o+y)/2, E);
+}
+
+plotaxis((6.2, 2.3));
+
+void drawcenterunit(pair o) {
+  real w = 1.16;
+  real gap = 0.16;
+  pair a = o - 0.5*(w,w), b = o+0.5*(w,w);
+  draw(box(a, b));
+  
+  real t = (w - 5*gap)/2;
+  real k = 0.1;
+  for (int i=0; i<6; ++i) {
+    draw((a.x+t+i*gap, b.y)--(a.x+t+i*gap,b.y+k));
+    draw((a.x+t+i*gap, a.y)--(a.x+t+i*gap,a.y-k)); 
+    draw((a.x, a.y+t+i*gap)--(a.x-k,a.y+t+i*gap)); 
+    draw((b.x, a.y+t+i*gap)--(b.x+k,a.y+t+i*gap)); 
+  }
+}
+
+drawcenterunit((5,3.5));
+label("\small ICM20948", (1+r, 4.85), E);
 \end{asy}
 \end{center}
 
