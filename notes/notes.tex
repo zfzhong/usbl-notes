@@ -138,8 +138,8 @@ void plotaxis(pair o) {
     dot(o);
     pair x = o - (1.2,0);
     pair y = o + (0,1.2);
-    draw(o -- x, arrow=Arrow(TeXHead), blue);
-    draw(o -- y, arrow=Arrow(TeXHead), blue);
+    draw(o -- x, arrow=Arrow(TeXHead), red);
+    draw(o -- y, arrow=Arrow(TeXHead), red);
     label("\small $x$", (o+x)/2, S);
     label("\small $y$", (o+y)/2, E);
 }
