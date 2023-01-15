@@ -89,20 +89,30 @@
 \end{subfigure}
 \end{figure}
 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.5\textwidth]{imgs/icm20948_fab_print.png}
+\caption{ICM20948 Fabrication Print}
+\end{figure}
+
 \begin{center}
 \begin{asy}
 /* 
 ICM20948 board: 15.7mm x 17.7mm x 4.6mm (1'' x 0.7'' x 0.2'');
 24-pin QFN: 3mm x 3mm x 1mm
 */
+import x11colors;
 import math;
 unitsize(16pt);
+pen rgbgreen = rgbint(60,235,195);
 int h = 7;
 int w = 10;
+int x = 1;
 real r = 0.7;
 draw(box((0,0),(w,h)));
 
-pair [] p1 = {(1,1), (w-1,1), (1,h-1), (w-1,h-1)};
+pair [] p1 = {(x,x), (w-x,x), (x,h-x), (w-x,h-x)};
 for (int i=0; i<p1.length; ++i) {
     draw(circle(p1[i], r));
     draw(circle(p1[i], r-0.1));
@@ -111,10 +121,10 @@ for (int i=0; i<p1.length; ++i) {
 void plotoutpins(pair a, pair b, string [] a1, string [] b1, real gapx, real gapt, real r) {
     for (int i=0; i<a1.length; ++i) {
         pair x = a+i*(gapx, 0);
-        draw(circle(x, r/2));
+        draw(circle(x, r/2), rgbgreen+linewidth(2pt));
         label("\tiny "+a1[i], x-(0,gapt), S);
         pair y = b+i*(gapx, 0);
-        draw(circle(y, r/2));
+        draw(circle(y, r/2), rgbgreen+linewidth(2pt));
         label("\tiny "+b1[i], y+(0,gapt), N);
     }
 }
@@ -201,5 +211,26 @@ label("\small ICM20948", (1+r, 4.85), E);
 
 \subsubsection{Note}
 If you want to connect multiple ICM20948s to one microcontroller, have them share the SCL, SDA, and DO pins. Then assign each one a unique CS pin.
+
+\newpage
+\section{Adafruit FT232H Chip}
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}[b]{0.4\textwidth}
+\includegraphics[width=\textwidth]{imgs/ft232h_front.jpeg}
+\caption{Front of Adafruit FT232H Chip}
+\end{subfigure}
+\begin{subfigure}[b]{0.425\textwidth}
+\includegraphics[width=\textwidth]{imgs/ft232h_fab_print.png}
+\caption{Fabrication Print of Adafruit FT232H Chip}
+\end{subfigure}
+\end{figure}
+
+\subsection{Technical Details}
+\begin{itemize}
+\item Size: 23mm x 38mm x 4mm / 0.9'' x 1.5'' x 0.2''
+\item Weight: 3.4g
+\end{itemize}
 
 \end{document} 
