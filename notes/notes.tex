@@ -32,6 +32,7 @@
 \usepackage{csquotes}
 \usepackage{soul}
 \usepackage{subcaption}
+\usepackage{verbatim}
 %\usepackage{ctex}
 
 %SetFonts
@@ -61,6 +62,62 @@
 \begin{quotation}
 ``\emph{The USBL transceiver measures the time from transmission of its acoustic signal until an acoustic reply from the transponder is detected, and converts it to distance to the transponder. Containing several transducers separated by a short distance (the ultra-short baseline antenna), the transceiver calculates the angle to the transponder}.'' -- From the S2C Reference Manual.
 \end{quotation}
+
+\begin{center}
+\begin{asy}
+unitsize(30pt);
+defaultpen(gray+linewidth(0.6pt));
+
+pair o = (0,0);
+real r = 3;
+
+draw(circle(o, r));
+draw(circle(o, r+0.05));
+draw(circle(o, r-0.3));
+draw(circle(o, r-0.325));
+
+draw(box((-3,-0.05),(-2.7,0.05)));
+draw((-3,r-0.5)--(-3,0), arrow=Arrow(), black);
+label("\tiny REFERENCE MARK", (-3,r-0.5), N, black);
+
+draw(circle(o, 2.4));
+draw(circle(o, 1.9));
+
+real r1 = 2.15, r2=0.3;
+pair [] loc = {(-r1,0), (0,r1), (r1,0), (0,-r1), (0,0)};
+for (int i=0; i<loc.length; ++i) {
+    filldraw(circle(loc[i], r2), white,linewidth(1.5pt)+black);
+    label(string(i+1), loc[i], black);
+}
+\end{asy}
+\end{center}
+
+\subsection{USBLPHYP: Coordinates Array Output}
+6 elementary arrays of three transducers per array are used to obtain 6 estimations of target coordinates in the local reference frame. The USBLPHYP string contains 6 set of coordinates, estimated by 6 elementary transducer arrays.
+
+The USBLPHYP string format is:
+\begin{verbatim}
+USBLPHYP, <current time>, <measurement time>, <remote address>, <fix type>, 
+<X123>, <Y123>, <Z123>, <X432>, <Y432>, <Z432>, <X341>, <Y341>, <Z341>,
+<X412>, <Y412>, <Z412>, <X153>, <Y153>, <Z153>, <X254>, <Y254>, <Z254>
+\end{verbatim}
+
+The positioning values are calculated when the acoustic link status is either ONLINE or INITIATION
+LISTEN.
+
+When the acoustic link status is ONLINE, positioning values are refreshed during burst data exchange between the local device and the target. When the acoustic link status is INITIATION LISTEN, positioning values are refreshed during instant message exchange between the local device and the target - direction to the target upon instant message reception, distance - upon reception of instant message acknowledgements.
+
+USBL positioning strings (USBLLONG, USBLANGLES, USBLPHYP, USBLPHYD) are always generated after RECV strings (RECVIM, RECVIMS, RECVPBM).
+
+\subsection{USBLPHYD: Transducer Delays Output}
+If Positioning Data Output and Extended Notifications are enabled for the current data channel, the device generates a USBLPHYD string following a USBLPHYP string (after USBLLONG or USBLANGLES).
+
+The USBLPHYD string format is:
+\begin{verbatim}
+USBLPHYD,<current time>,<measurement time>,<remote address>,<fix type>
+<delay 1-5>,<delay 2-5>,<delay 3-5>,<delay 4-5>,
+<delay 1-2>,<delay 4-1>,<delay 3-2>,<delay 3-4>
+\end{verbatim}
 
 \subsection{Positioning Strings}
 
@@ -338,6 +395,7 @@ draw((5.5,h7-7.5)--(4.5,h7-7.5)--(4.5,h7+7.5)--(5.5,h7+7.5));
 real x2 = 5.5+13;
 real y2 = h7 + 10;
 draw(box((x2,y2),(x2+13,y2-13)));
+label("\tiny BCM2837", (x2+6.5, y2-6.5));
 
 // Raspberry PI label
 label("\small Raspberry Pi 3 Model B", (x2+6.5, y2+6.5));
