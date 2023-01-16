@@ -233,4 +233,113 @@ If you want to connect multiple ICM20948s to one microcontroller, have them shar
 \item Weight: 3.4g
 \end{itemize}
 
+
+
+\newpage
+\section{Raspberry Pi 3 - Mode B}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.5\textwidth]{imgs/raspberry-pi-3-model-b.jpeg}
+\caption{Raspberry Pi 3 Mode B}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.6\textwidth]{imgs/pinout-of-R-Pi-3-Model-B-GPIO-scaled.jpeg}
+\caption{Raspberry Pi 3 Model B GPIO Pinout}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{imgs/raspberry-Pi-3B-V1.2-Mechanical-1.png}
+\caption{Raspberry Pi 3 Mechanical Dimensions }
+\end{figure}
+
+
+\begin{center}
+\begin{asy}
+/* Raspberry Pi 3 Model B
+   Size: 85mm x 56mm x 17mm
+*/
+
+void plotcircle(pair o, real r) {
+    draw(circle(o, r));
+    draw(circle(o, r/2));
+}
+
+unitsize(4pt);
+real w = 85, w1=58, w2=10.6, w3=32, w4=45, w5=53.5, h = 56, h1=49, h2=11.5, h3=29, h4=47, h5=10.25, h6=49/2;
+int r = 3;
+draw(arc((r,r),r,270,180)--arc((r,h-r),r,180,90)--arc((w-r,h-r),r,90,0)--arc((w-r,r),r,0,-90)--cycle);
+
+void plot4corners(real x, real w, real h, real r) {
+    pair [] p = {(x,x),(x, h-x),(w1+x,x),(w1+x,h-x)};
+    for (int i=0; i<p.length; ++i) { plotcircle(p[i], r); }
+}
+
+// circles at 4 corners
+real x = (h-h1)/2;
+plot4corners(x, w, h, r);
+
+// GPIO
+pen [] pens1 = {orange, blue, blue, green, black, red, green, green, orange, red, red, red, black, blue, green, green, green, red, green, black};
+pen [] pens2 = {orange, orange, black,  magenta, magenta, red, black, green, green, black, green, red, red, blue, black, green, black, red, red, red};
+draw(box((2*x,h1+1),(w1,h-1)));
+for (int i=0; i<20; ++i) {
+    real x1 = 2*x +0.75 + i*2.5;
+    real y1 = h-6+0.4;
+    filldraw(box((x1,y1), (x1+2,y1+1.9)), pens1[i]);
+    filldraw(box((x1,y1+2.3), (x1+2,y1+4.2)), pens2[i]);
+}
+
+// Micro USB
+draw(box((2*x, -0.5),(w2+(w2-2*x), x+r/2)));
+draw(box((2*x-0.2, -1),(w2+(w2-2*x)+0.2, -0.5)));
+label("\tiny MiniUSB", (w2, x));
+
+// HDMI
+draw(box((w3-7,-1.5),(w3+7,10.5)));
+label("\tiny HDMI", (w3, x));
+
+// CSI Camera slot
+draw((w4-1.5,0.5)--(w4+1.5,0.5)--(w4+1.5,4)--(w4+2.5,5)--(w4+2.5,18)--(w4+1.5,19)--(w4+1.5,22.5)--(w4-1.5,22.5)--cycle);
+draw((w4-1.5,4)--(w4-0.5,4)--(w4-0.5,19)--(w4-1.5,19));
+
+// 3.3mm audio and composite output port
+draw(box((w5-3.25,0),(w5+3.25,12)));
+draw(box((w5-2.5,-2),(w5+2.5,0)));
+label(rotate(90)*"\tiny Audio", (w5,6));
+
+// Ethernet
+real x3 = w+2;
+real x4 = w1+2*x+1;
+draw(box((x3,h5-7.25),(x4,h5+7.25)));
+label("\tiny Ethernet", ((x3+x4)/2, h5));
+
+// USB1 and USB2
+real x5 = w1+2*x+5;
+draw(box((x3,h3-6.5), (x5,h3+6.5)));
+draw(box((x3,h3-6.5),(w+1.5,h3-7.25)));
+draw(box((x3,h3+6.5),(w+1.5,h3+7.25)));
+label("\tiny USB", ((x3+x5)/2, h3));
+
+draw(box((x3,h4+6.5),(x5,h4-6.5)));
+draw(box((x3,h4+6.5),(w+1.5,h4+7.25)));
+draw(box((x3,h4-6.5),(w+1.5,h4-7.25)));
+label("\tiny USB", ((x3+x5)/2, h4));
+
+// Micro SD card slot
+real h7 = h6+x;
+draw((2.5,h7-11)--(5.5,h7-11)--(5.5,h7+11)--(2.5,h7+11)--(2.5,h7+7.5)--(1.5,h7+6.5)--(1.5,h7-6.5)--(2.5,h7-7.5)--cycle);
+draw((5.5,h7-7.5)--(4.5,h7-7.5)--(4.5,h7+7.5)--(5.5,h7+7.5));
+
+// CPU
+real x2 = 5.5+13;
+real y2 = h7 + 10;
+draw(box((x2,y2),(x2+13,y2-13)));
+\end{asy}
+\end{center}
+
+
 \end{document} 
